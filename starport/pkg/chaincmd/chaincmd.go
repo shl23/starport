@@ -41,12 +41,14 @@ const (
 )
 
 type ChainCmd struct {
-	appCmd         string
-	chainID        string
-	homeDir        string
-	keyringBackend KeyringBackend
-	cliCmd         string
-	cliHome        string
+	appCmd          string
+	chainID         string
+	homeDir         string
+	keyringBackend  KeyringBackend
+	keyringPassword string
+	cliCmd          string
+	cliHome         string
+	nodeAddress     string
 }
 
 // New creates a new ChainCmd to launch command with the chain app
@@ -86,11 +88,26 @@ func WithKeyringBackend(keyringBackend KeyringBackend) Option {
 	}
 }
 
+// WithKeyringPassword provides a password to unlock keyring
+func WithKeyringPassword(password string) Option {
+	return func(c *ChainCmd) {
+		c.keyringPassword = password
+	}
+}
+
 // WithLaunchpad defines the command as Launchpad application commands
 // and provides the name of the CLI application to call Launchpad CLI commands
 func WithLaunchpad(cliCmd string) Option {
 	return func(c *ChainCmd) {
 		c.cliCmd = cliCmd
+	}
+}
+
+// WitNodeAddress sets the node address for the commands that needs to make an
+// API request to the node that has a different node address other than the default one.
+func WitNodeAddress(addr string) Option {
+	return func(c *ChainCmd) {
+		c.nodeAddress = addr
 	}
 }
 
